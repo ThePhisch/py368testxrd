@@ -2,7 +2,7 @@ import argparse
 from typing import Tuple, List
 
 
-def cli_args(user_input: List[int]) -> Tuple[str, int]:
+def cli_args(user_input: List[int]) -> Tuple[str, int, int]:
     """
     Setup the parsing of arguments
     : Hostname
@@ -26,4 +26,4 @@ def cli_args(user_input: List[int]) -> Tuple[str, int]:
     )
     args = parser.parse_args(user_input)
     # setup_logging(args.debug)
-    return (args.hostname, args.port)
+    return (args.hostname, args.port, args.debug)
