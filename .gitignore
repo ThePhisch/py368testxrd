@@ -1,0 +1,4 @@
+*.pl
+.vscode/
+*.pyc
+tst.py
