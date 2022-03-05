@@ -35,7 +35,7 @@ class Close(Pytestxrd_Base_Function):
         # But you might send a command to close an empty dictionary. lol
         return super().check()
 
-    def run(self) -> None:
+    def run(self) -> bool:
         """
         Send the close request to the server
 
@@ -61,7 +61,7 @@ class Close(Pytestxrd_Base_Function):
             if reqcode == request_codes.kXR_error:
                 logging.warning(f"Response Code {reqcode} indicates an error")
                 self.handle_error_response()
-                return
+                return False
             # Handle normal response
             (must_be_zero,) = unpack("!l", self.socket.recv(4))
             if must_be_zero != 0:
@@ -73,5 +73,5 @@ class Close(Pytestxrd_Base_Function):
             self.persist.ft_remove_entry(path_name)
 
         logging.debug("Closing was successful.")
-        return
+        return True
         # TODO maybe a tool that tells you which files are open??

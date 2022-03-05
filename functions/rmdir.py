@@ -23,7 +23,7 @@ class Rmdir(Pytestxrd_Base_Function):
             self.err_number_of_arguments(self.largs, 1)
         return super().check()
 
-    def run(self) -> None:
+    def run(self) -> bool:
         """
         Send the rmdir request to the server
 
@@ -49,3 +49,6 @@ class Rmdir(Pytestxrd_Base_Function):
 
         if self.check_response_ok():
             logging.info("rmdir succeeded.")
+            return True
+        else:
+            return False

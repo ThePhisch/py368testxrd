@@ -103,7 +103,7 @@ class Open(Pytestxrd_Base_Function):
         logging.debug(f"Options allowed: {options_allowed}")
         return options_allowed, calculate_options_int(options_allowed)
 
-    def run(self) -> None:
+    def run(self) -> bool:
         """
         Send the open request to the server
 
@@ -113,7 +113,7 @@ class Open(Pytestxrd_Base_Function):
         if self.persist.ft_entry_exists(self.path):
             # Checking if it is already open
             logging.warning("Aborting open process.")
-            return
+            return False
 
         plen = len(self.path)
         mode = self.get_mode(
@@ -141,7 +141,7 @@ class Open(Pytestxrd_Base_Function):
         if reqcode == request_codes.kXR_error:
             logging.warning(f"Response Code {reqcode} indicates an error")
             self.handle_error_response()
-            return
+            return False
         # Handle normal response
         (rlen, fhandle_bytes) = unpack("!l4s", self.socket.recv(8))
         fhandle = int.from_bytes(fhandle_bytes, "little")
@@ -160,3 +160,5 @@ class Open(Pytestxrd_Base_Function):
 
         # Add to filetable
         self.persist.ft_add_entry(self.path, fhandle)
+        # TODO log success
+        return True

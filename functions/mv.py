@@ -25,7 +25,7 @@ class Mv(Pytestxrd_Base_Function):
 
 
 
-    def run(self) -> None:
+    def run(self) -> bool:
         """
         Send the mv request to the server
 
@@ -47,3 +47,5 @@ class Mv(Pytestxrd_Base_Function):
 
         if self.check_response_ok():
             logging.info("mv succeeded.")
+            return True
+        return False

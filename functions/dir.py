@@ -31,7 +31,7 @@ class Dir(Pytestxrd_Base_Function):
             print("Cancelling dir")
         return super().check()
 
-    def run(self) -> None:
+    def run(self) -> bool:
         """
         Send the dir request to the server
 
@@ -61,6 +61,9 @@ class Dir(Pytestxrd_Base_Function):
 
         if self.parse_dir_response():
             logging.info("dir succeeded.")
+            return True
+        else:
+            return False
 
     def parse_dir_response(self) -> bool:
         """

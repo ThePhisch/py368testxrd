@@ -24,7 +24,7 @@ class Chmod(Pytestxrd_Base_Function):
             print(f"Check number of arguments: {self.largs}/2 args given") # TODO move this to baseclass
         return super().check()
 
-    def run(self) -> None:
+    def run(self) -> bool:
         """
         Chmod <file> with permissions <mode>
         """
@@ -38,7 +38,7 @@ class Chmod(Pytestxrd_Base_Function):
         target_mode = self.get_mode(self.mode, forbidden_flags)
         if target_mode <= 0:
             logging.warning(f"Bad target mode: {target_mode} aquired (likely due to error), aborting chmod")
-            return
+            return False
         logging.debug(f"Or'd combination of flags results in target: {target_mode}")
 
         plen = len(self.path)
@@ -56,5 +56,8 @@ class Chmod(Pytestxrd_Base_Function):
         )
         if self.check_response_ok():
             logging.info("chmod succeeded.")
+            return True
+        else:
+            return False
 
 

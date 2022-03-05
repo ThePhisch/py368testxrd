@@ -31,8 +31,8 @@ class Pytestxrd_Base_Function:
     def check(self) -> bool:
         return self.can_run 
 
-    def run(self) -> None:
-        pass
+    def run(self) -> bool:
+        return True 
 
     def check_response_ok(self) -> bool:
         """

@@ -23,7 +23,7 @@ class Ping(Pytestxrd_Base_Function):
             self.can_run = True
         return super().check()
 
-    def run(self) -> None:
+    def run(self) -> bool:
         """
         Ping the server
         """
@@ -40,3 +40,6 @@ class Ping(Pytestxrd_Base_Function):
 
         if self.check_response_ok():
             logging.info("ping succeeded.")
+            return True
+        else:
+            return False

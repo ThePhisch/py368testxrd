@@ -43,7 +43,7 @@ class Read(Pytestxrd_Base_Function):
 
         return super().check()
 
-    def run(self) -> None:
+    def run(self) -> bool:
         """
         Send the read request to the server
 
@@ -61,7 +61,7 @@ class Read(Pytestxrd_Base_Function):
         if not self.persist.ft_entry_exists(self.path):
             # Checking if it is not yet open
             logging.warning("File not open. Aborting read process.")
-            return
+            return False
 
         send_args = (
             request_codes.kXR_read,
@@ -94,7 +94,7 @@ class Read(Pytestxrd_Base_Function):
             if reqcode == request_codes.kXR_error:
                 logging.warning(f"Response Code {reqcode} indicates an error")
                 self.handle_error_response()
-                return
+                return False
 
             # Handle normal response
             dlen = unpack("!l", self.socket.recv(4))[0]
@@ -107,4 +107,4 @@ class Read(Pytestxrd_Base_Function):
                 out_file.write(data)
 
         logging.info("Read completed.")
-        return
+        return True
