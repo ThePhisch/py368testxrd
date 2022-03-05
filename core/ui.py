@@ -3,6 +3,7 @@ import socket
 
 # import functions here
 from core.connect import login
+from functions import class_dict
 
 class UI:
     """
@@ -23,9 +24,19 @@ class UI:
     def prompt(self) -> None:
         """
         Standard prompt
+        And Parse and Execute Necessary Functions
         """
-        command = input(f"{self.hostname}:{self.port}> ")
+        command = input(f"{self.hostname}:{self.port}> ").split()
         # parse user input here
+        if command[0] == "help":
+            if len(command) == 1:
+                self.get_help()
+            else:
+                print(f"Check number of arguments: {len(command)}/1 args given")
+        elif command[0] in class_dict.keys():
+            operator = class_dict[command[0]](command[1:], self.socket)
+        else:
+            print("Command not found.")
         return
 
     def exiting(self) -> None:
@@ -39,6 +50,6 @@ class UI:
         """
         Print a helpscreen
         """
-        for f in functions.funclist:
+        for f in class_dict.values():
             print(f.help_str())
 

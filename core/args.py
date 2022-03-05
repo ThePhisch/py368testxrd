@@ -2,7 +2,7 @@ import argparse
 from typing import Tuple, List
 
 
-def cli_args(user_input: List[int]) -> Tuple[str, int, int]:
+def cli_args(user_input: List[str]) -> Tuple[str, int, int]:
     """
     Setup the parsing of arguments
     : Hostname
