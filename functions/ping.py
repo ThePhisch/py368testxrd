@@ -4,7 +4,7 @@ from definitions import general_vals, request_codes
 from functions.baseclass import Pytestxrd_Base_Function
 from core.connect import send
 from functools import reduce
-from typing import List, Set
+from typing import List, Set, Any
 
 class Ping(Pytestxrd_Base_Function):
     """
@@ -15,20 +15,19 @@ class Ping(Pytestxrd_Base_Function):
     def help_str() -> str:
         return "ping\t"
 
-    def __init__(self, args: List[str], socket: socket.socket) -> None:
-        super().__init__(args, socket)
-        if len(args) != 0:
-            extra_args = ", ".join(args) 
+    def check(self) -> bool:
+        if self.largs != 0:
+            extra_args = ", ".join(self.args) 
             print(f"Extraneous ping arguments - {extra_args}")
-            return
         else:
-            self.run()
+            self.can_run = True
+        return super().check()
 
     def run(self) -> None:
         """
         Ping the server
         """
-        args = (
+        send_args = (
             request_codes.kXR_ping,
             b"\0"*16,
             0,
@@ -36,7 +35,7 @@ class Ping(Pytestxrd_Base_Function):
         send(
             self.socket,
             f"!H16sl",
-            args
+            send_args
         )
 
         if self.check_response_ok():

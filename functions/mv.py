@@ -3,7 +3,7 @@ import socket
 from definitions import general_vals, request_codes
 from functions.baseclass import Pytestxrd_Base_Function
 from core.connect import send
-from typing import List, Set
+from typing import List, Set, Any
 
 class Mv(Pytestxrd_Base_Function):
     """
@@ -14,14 +14,14 @@ class Mv(Pytestxrd_Base_Function):
     def help_str() -> str:
         return "mv\t<old_path> <new_path>"
 
-    def __init__(self, args: List[str], socket: socket.socket) -> None:
-        super().__init__(args,socket)
-        if len(args) == 2:
-            self.oldp = args[0] 
-            self.newp = args[1] + "X" # to counteract truncation
-            self.run()
+    def check(self) -> bool:
+        if self.largs == 2:
+            self.oldp = self.args[0] 
+            self.newp = self.args[1] + "X" # to counteract truncation
+            self.can_run = True
         else:
-            print(f"Check number of arguments: {len(args)}/2 args given")
+            print(f"Check number of arguments: {self.largs}/2 args given")
+        return super().check()
 
 
 
@@ -32,7 +32,7 @@ class Mv(Pytestxrd_Base_Function):
         also includes validation using check_response_ok
         """
         plen = len(self.oldp + self.newp)
-        args = (
+        send_args = (
             request_codes.kXR_mv,
             b"\0"*14,
             len(self.oldp),
@@ -42,7 +42,7 @@ class Mv(Pytestxrd_Base_Function):
         send(
             self.socket,
             f"!H14sHl{plen}s",
-            args
+            send_args
         )
 
         if self.check_response_ok():

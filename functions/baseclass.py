@@ -2,22 +2,34 @@ import logging
 import socket
 from struct import unpack
 from functools import reduce
-from typing import List, Set
+from typing import List, Set, Any, Any
 
 from definitions import general_vals, request_codes
 
 
 class Pytestxrd_Base_Function:
     """
-    Implement a basic class for the
+    Implement a basic class for the functions
+    
+    How to use??
+    * init(): pass parameters
+    * check(): find out if initialisation was successful
+    * run(): run the function
     """
 
     @staticmethod
     def help_str() -> str:
         return "Help has not been defined for this function."
 
-    def __init__(self, args: List[str], socket: socket.socket) -> None:
+    def __init__(self, args: List[str], socket: socket.socket, **kwargs: Any) -> None:
+        self.can_run = False
         self.socket = socket
+        self.args = args
+        self.largs = len(self.args)
+        self.kwargs = kwargs
+
+    def check(self) -> bool:
+        return self.can_run 
 
     def run(self) -> None:
         pass

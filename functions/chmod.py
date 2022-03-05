@@ -4,7 +4,7 @@ from definitions import general_vals, request_codes
 from functions.baseclass import Pytestxrd_Base_Function
 from core.connect import send
 from functools import reduce
-from typing import List, Set
+from typing import List, Set, Any
 
 class Chmod(Pytestxrd_Base_Function):
     """
@@ -15,14 +15,14 @@ class Chmod(Pytestxrd_Base_Function):
     def help_str() -> str:
         return "chmod\t<mode> <path>"
 
-    def __init__(self, args: List[str], socket: socket.socket) -> None:
-        super().__init__(args, socket)
-        if len(args) == 2:
-            self.mode = args[0]
-            self.path = args[1]
-            self.run()
+    def check(self) -> bool:
+        if self.largs == 2:
+            self.mode = self.args[0]
+            self.path = self.args[1]
+            self.can_run = True
         else:
-            print(f"Check number of arguments: {len(args)}/2 args given") # TODO move this to baseclass
+            print(f"Check number of arguments: {self.largs}/2 args given") # TODO move this to baseclass
+        return super().check()
 
     def run(self) -> None:
         """

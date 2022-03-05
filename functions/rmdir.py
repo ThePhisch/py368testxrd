@@ -3,7 +3,7 @@ import socket
 from core.connect import send
 from definitions import request_codes
 from functions.baseclass import Pytestxrd_Base_Function
-from typing import List, Set
+from typing import List, Set, Any
 
 
 class Rmdir(Pytestxrd_Base_Function):
@@ -15,13 +15,13 @@ class Rmdir(Pytestxrd_Base_Function):
     def help_str() -> str:
         return "rmdir\t<path>"
 
-    def __init__(self, args: List[str], socket: socket.socket) -> None:
-        super().__init__(args, socket)
-        if len(args) == 1:
-            self.path = args[0]
-            self.run()
+    def check(self) -> bool:
+        if self.largs == 1:
+            self.path = self.args[0]
+            self.can_run = True
         else:
-            self.err_number_of_arguments(len(args), 1)
+            self.err_number_of_arguments(self.largs, 1)
+        return super().check()
 
     def run(self) -> None:
         """
@@ -39,13 +39,13 @@ class Rmdir(Pytestxrd_Base_Function):
         also includes validation using check_response_ok
         """
         plen = len(self.path)
-        args = (
+        send_args = (
             request_codes.kXR_rmdir,
             b"\0" * 16,
             plen,
             self.path.encode("UTF-8"),
         )
-        send(self.socket, f"!H16sl{plen}s", args)
+        send(self.socket, f"!H16sl{plen}s", send_args)
 
         if self.check_response_ok():
             logging.info("rmdir succeeded.")

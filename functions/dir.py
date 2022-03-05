@@ -6,7 +6,7 @@ import logging
 from core.connect import send
 from struct import unpack
 from definitions import general_vals
-from typing import List, Set
+from typing import List, Set, Any
 
 
 class Dir(Pytestxrd_Base_Function):
@@ -15,22 +15,21 @@ class Dir(Pytestxrd_Base_Function):
         return "dir\t[c] [s] <path>\n\twhere: c->chksum s->return stat"
         # option "online" has been removed, not present in 5.0.0 spec
 
-    def __init__(self, args: List[str], socket: socket.socket) -> None:
-        super().__init__(args, socket)
-        largs = len(args)
-        if largs == 0:
+    def check(self) -> bool:
+        if self.largs == 0:
             # at least one argument required
-            self.err_number_of_arguments(len(args), 1)
-        elif largs > 2:
+            self.err_number_of_arguments(self.largs, 1)
+        elif self.largs > 2:
             # too many options given
-            self.err_number_of_options(largs-1, 1)
-        elif self.check_options_subset(args[:-1], {"c", "s"}):
+            self.err_number_of_options(self.largs-1, 1)
+        elif self.check_options_subset(self.args[:-1], {"c", "s"}):
             # All options recognised
-            self.options = args[:-1]
-            self.dirpath = args[-1]
-            self.run()
+            self.options = self.args[:-1]
+            self.dirpath = self.args[-1]
+            self.can_run = True
         else:
             print("Cancelling dir")
+        return super().check()
 
     def run(self) -> None:
         """
