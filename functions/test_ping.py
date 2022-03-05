@@ -1,4 +1,3 @@
-from ast import operator
 import unittest
 from core.connect import connect_xrootd, login
 from functions.ping import Ping
